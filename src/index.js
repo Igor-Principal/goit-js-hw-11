@@ -1,6 +1,6 @@
 import { fetchImg } from './JS/fetch-info';
 import Notiflix from 'notiflix';
-import lightbox from 'simplelightbox';
+import { lightbox } from './JS/lightbox';
 
 const refs = {
   form: document.querySelector('#search-form'),
@@ -14,8 +14,8 @@ const perPage = 40;
 let textFind = '';
 
 const paramsNotif = {
-  position: 'center-center',
-  timeout: 4000,
+  position: 'top-right',
+  timeout: 2000,
   width: '400px',
   fontSize: '24px',
 };
@@ -53,7 +53,8 @@ function onSubmit(evt) {
         lightbox.refresh();
       }
       if (data.totalHits > perPage) {
-        btn.classList.remove('is-hidden');
+        // btn.classList.remove('is-hidden');
+        window.addEventListener('scroll', showLoadMorePage);
       }
     })
     .catch(onFetchError);
@@ -72,11 +73,13 @@ function onClickLoadMore() {
 
       createMarkup(searchResults);
       if (page === numberOfPage) {
+        // btnLoadMore.classList.add('is-hidden');
         Notiflix.Notify.info(
           "We're sorry, but you've reached the end of search results.",
           paramsNotif
         );
         btn.removeEventListener('click', onClickLoadMore);
+        window.removeEventListener('scroll', showLoadMorePage);
       }
       lightbox.refresh();
     })
@@ -124,5 +127,16 @@ function onFetchError() {
   Notiflix.Notify.failure(
     'Oops! Something went wrong! Try reloading the page or make another choice!',
     paramsNotif
+  );
+}
+
+function showLoadMorePage() {
+  if (checkIfEndOfPage()) {
+    onClickLoadMore();
+  }
+}
+function checkIfEndOfPage() {
+  return (
+    window.innerHeight + window.scrollY >= document.documentElement.scrollHeight
   );
 }
