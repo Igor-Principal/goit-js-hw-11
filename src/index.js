@@ -25,7 +25,7 @@ form.addEventListener('submit', onSubmit);
 
 function onSubmit(evt) {
   evt.preventDefault();
-  page += 1;
+  page = 0;
   gallery.innerHTML = '';
 
   textFind = evt.currentTarget.searchQuery.value.trim().toLowerCase();
@@ -33,7 +33,7 @@ function onSubmit(evt) {
     Notiflix.Notify.info('Enter your request, please!', paramsNotif);
     return;
   }
-
+page += 1;
   fetchImg(page, textFind, perPage)
     .then(data => {
       const results = data.hits;
