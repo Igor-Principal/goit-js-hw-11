@@ -1,6 +1,7 @@
 import { fetchImg } from './JS/fetch-info';
 import Notiflix from 'notiflix';
 import { lightbox } from './JS/lightbox';
+import { createMarkup } from './JS/create-markup';
 
 const refs = {
   form: document.querySelector('#search-form'),
@@ -27,9 +28,7 @@ function onSubmit(evt) {
   page += 1;
   gallery.innerHTML = '';
 
-  textFind = evt.currentTarget.searchQuery.value
-    .trim()
-    .toLowerCase();
+  textFind = evt.currentTarget.searchQuery.value.trim().toLowerCase();
   if (textFind === '') {
     Notiflix.Notify.info('Enter your request, please!', paramsNotif);
     return;
@@ -48,7 +47,7 @@ function onSubmit(evt) {
           `Hooray! We found ${data.totalHits} images.`,
           paramsNotif
         );
-        createMarkup(results);
+        gallery.innerHTML = createMarkup(results);
         lightbox.refresh();
       }
       if (data.totalHits > perPage) {
@@ -70,7 +69,7 @@ function onClickLoadMore() {
       const searchResults = data.hits;
       const numberOfPage = Math.round(data.totalHits / perPage);
 
-      createMarkup(searchResults);
+      gallery.insertAdjacentHTML('beforeend', createMarkup(searchResults));
       if (page === numberOfPage) {
         // btnLoadMore.classList.add('is-hidden');
         Notiflix.Notify.info(
@@ -83,43 +82,6 @@ function onClickLoadMore() {
       lightbox.refresh();
     })
     .catch(onFetchError);
-}
-
-function createMarkup(searchResults) {
-  const arrPhotos = searchResults.map(
-    ({
-      webformatURL,
-      largeImageURL,
-      tags,
-      likes,
-      views,
-      comments,
-      downloads,
-    }) => {
-      return `<div class="photo-card">
-        <div class="img_wrap">
-            <a class="gallery_link" href="${largeImageURL}">
-                <img src="${webformatURL}" alt="${tags}" width="300" loading="lazy" />
-            </a>
-        </div>
-        <div class="info">
-            <p class="info-item">
-            <b>Likes: ${likes}</b>
-            </p>
-            <p class="info-item">
-            <b>Views: ${views}</b>
-            </p>
-            <p class="info-item">
-            <b>Comments: ${comments}</b>
-            </p>
-            <p class="info-item">
-            <b>Downloads: ${downloads}</b>
-            </p>
-        </div>
-        </div>`;
-    }
-  );
-  gallery.insertAdjacentHTML('beforeend', arrPhotos.join(''));
 }
 
 function onFetchError() {
