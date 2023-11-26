@@ -29,8 +29,7 @@ function onSubmit(evt) {
 
   textFind = evt.currentTarget.searchQuery.value
     .trim()
-    .toLowerCase()
-    .split(' ');
+    .toLowerCase();
   if (textFind === '') {
     Notiflix.Notify.info('Enter your request, please!', paramsNotif);
     return;
