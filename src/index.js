@@ -63,19 +63,12 @@ function onSubmit(evt) {
   evt.currentTarget.reset();
 }
 
-function onFetchError() {
-  Notiflix.Notify.failure(
-    'Oops! Something went wrong! Try reloading the page or make another choice!',
-    paramsNotif
-  );
-}
-
 function onClickLoadMore() {
   page += 1;
   fetchImg(page, textFind, perPage)
     .then(data => {
       const searchResults = data.hits;
-      const numberOfPage = Math.ceil(data.totalHits / perPage);
+      const numberOfPage = Math.round(data.totalHits / perPage);
 
       createMarkup(searchResults);
       if (page === numberOfPage) {
@@ -125,4 +118,11 @@ function createMarkup(searchResults) {
     }
   );
   gallery.insertAdjacentHTML('beforeend', arrPhotos.join(''));
+}
+
+function onFetchError() {
+  Notiflix.Notify.failure(
+    'Oops! Something went wrong! Try reloading the page or make another choice!',
+    paramsNotif
+  );
 }
