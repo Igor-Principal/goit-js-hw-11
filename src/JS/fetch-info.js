@@ -14,7 +14,7 @@ async function fetchImg(page = 1, info, perPage) {
     key: API_KEY,
     page: page,
     q: info,
-    perPage: perPage,
+    per_page: perPage,
     image_type: 'horizontal',
     safesearch: 'true',
   });
