@@ -33,7 +33,9 @@ function onSubmit(evt) {
     Notiflix.Notify.info('Enter your request, please!', paramsNotif);
     return;
   }
-page += 1;
+  page += 1;
+  window.removeEventListener('scroll', showLoadMorePage);
+
   fetchImg(page, textFind, perPage)
     .then(data => {
       const results = data.hits;
